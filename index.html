@@ -18,7 +18,7 @@
     <meta name="msapplication-TileImage" content="icon-144x144.png">
     <meta name="msapplication-TileColor" content="#ffffff">
 </head>
-<body>
+<body onload="">
     <nav>
         <a href='index.html' class='selected'>Home</a>
         <a href='blog.html'>Blog</a>
@@ -29,3 +29,10 @@
     </main>
 </body>
 </html>
+<script>
+    function test() {
+        var msg = new SpeechSynthesisUtterance('Hello World');
+        window.speechSynthesis.speak(msg);
+    }
+    
+</script>
