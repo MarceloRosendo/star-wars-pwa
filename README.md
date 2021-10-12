@@ -1,6 +1,6 @@
 # NOME DA APLICAÇÃO
 Painel de chamadas Jedi
-**Nome do aluno**
+**Marcelo Maximiano Carvalho Rosendo**
 
 O objetivo desta aplicação e chamar os pilotos das naves de starwars pelo nome utilizando o textToSpeech do navegador
 
@@ -10,7 +10,7 @@ O objetivo desta aplicação e chamar os pilotos das naves de starwars pelo nome
 
 Nesta tela mostra um input de nome e outro para a nave, ao clicar em Decolar um robo ira chamar o respectivo piloto pelo nome!
 
-### Tela de ....
+### Tela de historico
 
 Nesta outra tela o historico de pilotos chamados sera mostrado de maneira ordenada
 
@@ -27,6 +27,6 @@ Nesta aplicação, os dados do usuário que são armazenados são: uma lista do 
 - A aplicação armazena e usa de forma relevante dados complexos do usuário? **Sim**
 - A aplicação possui um manifesto para instalação no dispositivo do usuário? **Sim**
 - A aplicação possui um _service worker_ que permite o funcionamento off-line? **Sim**
-- O código da minha aplicação possui comentários explicando cada operação? **Não**
+- O código da minha aplicação possui comentários explicando cada operação? **Não** pois acredito que o codigo esta auto explicativo
 - A aplicação está funcionando corretamente? **Sim**
 - A aplicação está completa? **Sim**
