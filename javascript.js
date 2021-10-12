@@ -1,51 +1,118 @@
-var synth = window.speechSynthesis;
 
-var inputForm = document.querySelector('form');
-var inputTxt = document.querySelector('.txt');
-var voiceSelect = document.querySelector('select');
-
-var pitch = document.querySelector('#pitch');
-var pitchValue = document.querySelector('.pitch-value');
-var rate = document.querySelector('#rate');
-var rateValue = document.querySelector('.rate-value');
-
-var voices = [];
-
-function populateVoiceList() {
-  voices = synth.getVoices();
-
-  for(var i = 0; i < voices.length ; i++) {
-    var option = document.createElement('option');
-    option.textContent = voices[i].name + ' (' + voices[i].lang + ')';
-
-    if(voices[i].default) {
-      option.textContent += ' -- DEFAULT';
+window.onload = () => {
+  if ('speechSynthesis' in window) {
+    doSpeechSynthesis();
+  } else {
+    msg = document.createElement('h5');
+    msg.textContent = "Detected no support for Speech Synthesis";
+    msg.style.textAlign = 'center';
+    msg.style.backgroundColor = 'red';
+    msg.style.color = 'white';
+    msg.style.marginTop = msg.style.marginBottom = 0;
+    document.body.insertBefore(msg, document.querySelector('#SpeechSynthesis'));
+  }
+}
+const maxOfMessagesOnHistory = 10;
+const saveOnLocalStorage = (content) => {
+  var history = localStorage.getItem('history')
+  if (history) {
+    history = JSON.parse(history)
+    if (history.length > maxOfMessagesOnHistory) {
+      history.shift()
     }
+  } else {
+    history = []
+  }
+  history.push(content)
+  localStorage.setItem('history', JSON.stringify(history));
+}
+doSpeechSynthesis = () => {
+  var synth = speechSynthesis;
+  var flag = false;
 
-    option.setAttribute('data-lang', voices[i].lang);
-    option.setAttribute('data-name', voices[i].name);
-    voiceSelect.appendChild(option);
+  if (synth.speaking) {
+    flag = false;
+    synth.cancel();
+  }
+
+  var playEle = document.querySelector('#speechplay');
+
+  /* click event handlers for the buttons */
+  playEle.addEventListener('click', onLaunch);
+
+  var voices = [];
+
+  populateVoiceList();
+
+  function populateVoiceList() {
+    voices = synth.getVoices().sort(function (a, b) {
+      const aname = a.name.toUpperCase(), bname = b.name.toUpperCase();
+      if (aname < bname)
+        return -1;
+      else if (aname == bname)
+        return 0;
+      else
+        return +1;
+    });
+  }
+
+  function onLaunch() {
+    if (!flag) {
+      flag = true;
+      const name = document.getElementById('jediName').value
+      const spaceShip = document.getElementById('jediSpeceshipName').value
+      const messageToSpeak = `Atenção, o piloto ${name} da nave ${spaceShip} está decolando`;
+      utterance = new SpeechSynthesisUtterance(messageToSpeak);
+
+      utterance.voice = voices[20];
+
+      utterance.onend = () => {
+        flag = false;
+        // save on localstorage
+        saveOnLocalStorage(messageToSpeak)
+      }
+      synth.speak(utterance);
+
+      let r = setInterval(() => {
+        console.log(speechSynthesis.speaking);
+        if (!speechSynthesis.speaking) {
+          clearInterval(r);
+        } else {
+          speechSynthesis.resume();
+        }
+      }, 14000);
+    }
+    if (synth.paused) {
+      synth.resume();
+    }
   }
 }
 
-populateVoiceList();
-if (speechSynthesis.onvoiceschanged !== undefined) {
-  speechSynthesis.onvoiceschanged = populateVoiceList;
+const onLaunch = () => {
+  const jediName = document.getElementById('jediName').value
+  const spaceShip = document.getElementById('jediSpeceshipName').value
+  onLaunch(jediName, spaceShip)
 }
 
-inputForm.onsubmit = function(event) {
-  event.preventDefault();
-
-  var utterThis = new SpeechSynthesisUtterance(inputTxt.value);
-  var selectedOption = voiceSelect.selectedOptions[0].getAttribute('data-name');
-  for(var i = 0; i < voices.length ; i++) {
-    if(voices[i].name === selectedOption) {
-      utterThis.voice = voices[i];
-    }
+myFunction = () => {
+  var x = document.getElementById("navDemo");
+  if (x.className.indexOf("w3-show") == -1) {
+    x.className += " w3-show";
+  } else {
+    x.className = x.className.replace(" w3-show", "");
   }
-  utterThis.pitch = pitch.value;
-  utterThis.rate = rate.value;
-  synth.speak(utterThis);
-
-  inputTxt.blur();
 }
+
+// When the user clicks anywhere outside of the modal, close it
+var modal = document.getElementById('ticketModal');
+window.onclick = function (event) {
+  if (event.target == modal) {
+    modal.style.display = "none";
+  }
+}
+
+const redirectToHistory = () => {
+  location.href = 'history.html'
+}
+
+
